@@ -1,0 +1,53 @@
+.landing {
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid red;
+  background: white;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.landing img {
+  width: 100%;
+}
+.landing .mobile {
+  display: none;
+}
+.landing > button {
+  position: fixed;
+  top: 2vw;
+  right: 3vw;
+  color: #f0663f; /* 텍스트 색상 */
+  font-size: 0.94vw;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 30px; /* 둥근 모서리 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.landing > button img {
+  width: 1.5vw;
+  margin-left: 0.5vw;
+}
+@media (max-width: 500px) {
+  .landing .pc {
+    display: none;
+  }
+  .landing .mobile {
+    display: block;
+  }
+  .landing > button {
+    top: 5vw;
+    right: 13vw;
+    font-size: 3vw;
+  }
+  .landing > button img {
+    width: 5vw;
+    margin-left: 2vw;
+  }
+}

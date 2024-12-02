@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "creamoff",
+    "password": "zmfladhvm",
+    "database": "creamoff",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "creamoff",
+    "password": "zmfladhvm",
+    "database": "creamoff",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "creamoff",
+    "password": "zmfladhvm",
+    "database": "creamoff",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
