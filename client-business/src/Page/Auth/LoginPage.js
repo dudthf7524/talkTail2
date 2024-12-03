@@ -19,6 +19,9 @@ const Login = () => {
         <button type='submit'>로그인 하기</button>
       </div>
       <div className='find-id-pw-text'>
+        <Link to="/register">회원가입</Link>
+      </div>
+      <div className='find-id-pw-text'>
         <Link to="/find-admin-account">아이디/비밀번호 찾기</Link>
       </div>
     </div>

@@ -11,12 +11,12 @@ dotenv.config();
 
 router.get('/businesses', authMiddleware, businessController.getAllBusinesses);
 router.get('/businesses/:id', authMiddleware, businessController.getBusinessById);
-router.post('/businesses', upload.fields([
+
+router.post('/businesses', businessController.createBusiness);
+
+router.post('/businesses-information', upload.fields([
     { name: 'main', maxCount: 1 },
-    { name: 'sub', maxCount: 50 },
-    { name: 'album', maxCount: 50 },
-    { name: 'review', maxCount: 50 },
-    { name: 'pricing', maxCount: 10 }
-]), businessController.createBusiness);
+    { name: 'pricing', maxCount: 3 }
+]), businessController.createBusinessInformation);
 
 module.exports = router;

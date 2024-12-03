@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ImageContext } from '../../Contexts/ImageContext';
 
 function RegisterInformation() {
-    //주소 api
+    // 주소 api
     const [postcode, setPostcode] = useState(""); // 우편번호
     const [roadAddress, setRoadAddress] = useState(""); // 도로명 주소
     const [jibunAddress, setJibunAddress] = useState(""); // 지번 주소
@@ -64,7 +64,7 @@ function RegisterInformation() {
     const navigate = useNavigate();
     const arrowButtonUrl = `${process.env.PUBLIC_URL}/images/button/arrow_left.svg`;
     const keyButtonUrl = `${process.env.PUBLIC_URL}/images/icon/keyboard_return.svg`;
-
+    console.log(imageFiles)
     useEffect(() => {
         const textarea = document.getElementById('greetingTextarea');
         const placeholderText = '간단한 인삿말\n30자 이내';
@@ -76,25 +76,70 @@ function RegisterInformation() {
         navigate(`/imgupload/${imageType}`);
     };
 
+    const [formData, setFormData] = useState({
+        business_registration_number: '000-00-0000',
+        address_postcode: '',
+        address_road: '',
+        address_jibun: '',
+        dayon: '',
+        dayoff: '',
+        business_no_show: '',
+    });
+    formData.address_postcode = postcode;
+    formData.address_road = roadAddress;
+    formData.address_jibun = jibunAddress;
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const [selectedDays, setSelectedDays] = useState([]); // 선택된 요일을 저장
+    const daysOfWeek = ["월", "화", "수", "목", "금", "토", "일"];
+
+    const toggleDay = (day) => {
+        setSelectedDays((prevSelected) =>
+            prevSelected.includes(day)
+                ? prevSelected.filter((d) => d !== day) // 이미 선택된 경우 제거
+                : [...prevSelected, day] // 선택된 경우 추가
+        );
+    };
+    const offDays = daysOfWeek.filter((day) => !selectedDays.includes(day));
+
+    var dayon = '';
+    var dayoff = '';
+    for (let i = 0; i < selectedDays.length; i++) {
+        dayon += selectedDays[i]
+    }
+
+    for (let i = 0; i < offDays.length; i++) {
+        dayoff += offDays[i]
+    }
+
+
+    formData.dayon = dayon;
+    formData.dayoff = dayoff;
+    console.log(formData)
+
     const handleSave = async () => {
         try {
-            const formData = new FormData();
+            const data = new FormData();
+            // FormData에 텍스트 필드 추가
+            Object.keys(formData).forEach((key) => {
+                data.append(key, formData[key]);
+            });
 
-            // 이미지 파일을 FormData에 추가
+            // FormData에 이미지 파일 추가
             Object.keys(imageFiles).forEach((key) => {
                 imageFiles[key].forEach((file) => {
-                    formData.append(key, file);
+                    data.append(key, file);
                 });
             });
-
-            // 추가 입력값들을 FormData에 추가
-            const inputs = document.querySelectorAll('.input-container input, .input-container textarea');
-            inputs.forEach((input) => {
-                formData.append(input.name, input.value);
-            });
-
             // 서버로 FormData를 전송
-            const response = await axios.post(`${apiUrl}/api/businesses`, formData, {
+            const response = await axios.post(`${apiUrl}/api/businesses-information`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -110,54 +155,7 @@ function RegisterInformation() {
         }
     };
 
-    const [phone2, setPhone2] = useState(""); // 우편번호
-    const [phone3, setPhone3] = useState(""); // 우편번호
-    const [formData, setFormData] = useState({
-        address_postcode: '',
-        address_road: '',
-        address_jibun: '',
-        dayon: '',
-        dayoff: '',
 
-    });
-    formData.address_postcode = postcode;
-    formData.address_road = roadAddress;
-    formData.address_jibun = jibunAddress;
-   
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const [selectedDays, setSelectedDays] = useState([]); // 선택된 요일을 저장
-    const daysOfWeek = ["월", "화", "수", "목", "금", "토", "일"];
-
-    const toggleDay = (day) => {
-        setSelectedDays((prevSelected) => 
-            prevSelected.includes(day)
-                ? prevSelected.filter((d) => d !== day) // 이미 선택된 경우 제거
-                : [...prevSelected, day] // 선택된 경우 추가
-        );
-    };
-    const offDays = daysOfWeek.filter((day) => !selectedDays.includes(day));
-    
-    var dayon ='';
-    var dayoff ='';
-    for (let i = 0; i < selectedDays.length; i++) {
-        dayon += selectedDays[i]
-    }
-   
-    for (let i = 0; i < offDays.length; i++) {
-        dayoff += offDays[i]
-    }
-    
-    
-    formData.dayon = dayon;
-    formData.dayoff = dayoff;
-    console.log(formData)
 
     return (
         <div className='mid' lang='ko'>
@@ -228,15 +226,15 @@ function RegisterInformation() {
                 </div>
                 <div className='input-container'>
                     <p>도로명 주소</p>
-                    <input type="text" name='address_road' value={roadAddress} onChange={handleInputChange} readOnly placeholder="우편번호" />
+                    <input type="text" name='address_road' value={roadAddress} onChange={handleInputChange} readOnly placeholder="도로명 주소" />
                 </div>
                 <div className='input-container'>
                     <p>지번 주소</p>
-                    <input type="text" name='address_jibun' value={jibunAddress} onChange={handleInputChange} readOnly placeholder="우편번호" />
+                    <input type="text" name='address_jibun' value={jibunAddress} onChange={handleInputChange} readOnly placeholder="지번 주소" />
                 </div>
                 <div className='input-container'>
                     <p>상세 주소</p>
-                    <input type="text" name='address_detail' value={formData.address_detail} onChange={handleInputChange} />
+                    <input type="text" name='address_detail' value={formData.address_detail} onChange={handleInputChange} placeholder="상세 주소" />
                 </div>
 
 
@@ -335,7 +333,7 @@ function RegisterInformation() {
                     -
                     <input type='text' className='phone' name='business_phone2' value={formData.business_phone2} onChange={handleInputChange} />
                     -
-                    <input type='text' className='phone'name='business_phone3' value={formData.business_phone3} onChange={handleInputChange} />
+                    <input type='text' className='phone' name='business_phone3' value={formData.business_phone3} onChange={handleInputChange} />
                 </div>
 
                 <div className='input-container'>
@@ -343,6 +341,10 @@ function RegisterInformation() {
                     <div className="textarea-wrapper">
                         <textarea id='greetingTextarea' name='business_comment' value={formData.business_comment} onChange={handleInputChange} />
                     </div>
+                </div>
+                <div className='input-container'>
+                    <p>노쇼 금액</p>
+                    <input type="text" name='business_no_show' value={formData.business_no_show} onChange={handleInputChange} />
                 </div>
             </div>
         </div>

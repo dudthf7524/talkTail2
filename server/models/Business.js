@@ -26,22 +26,36 @@ const Business = sequelize.define('TB_BUSINESSES', {
     },
     
     business_owner_name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(20),
         allowNull: false,
         defaultValue: '',
     },
     business_owner_email: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.STRING(20),
         allowNull: false,
-        defaultValue: 5.0,
+        defaultValue: '',
     },
     business_owner_phone1: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     business_owner_phone2: {
-        type: DataTypes.TIME,
+        type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    business_owner_phone3: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
     },
 }, {
     timestamps: false,

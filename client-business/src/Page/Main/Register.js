@@ -10,11 +10,19 @@ function Register() {
   const arrowButtonUrl = `${process.env.PUBLIC_URL}/images/button/arrow_left.svg`;
   const keyButtonUrl = `${process.env.PUBLIC_URL}/images/icon/keyboard_return.svg`;
 
-  const handleUploadClick = (imageType) => {
-    navigate(`/imgupload/${imageType}`);
-  };
+  
 
-  const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState({
+    login_id: "",
+    login_password: "",
+    business_registration_name: "",
+    business_registration_number: "",
+    business_owner_name: "",
+    business_owner_email: "",
+    business_owner_phone1: 0,
+    business_owner_phone2: 0,
+    business_owner_phone3: 0,
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,28 +32,13 @@ function Register() {
     });
 };
 
+console.log(formData)
+
+
   const handleSave = async () => {
     try {
-      const formData = new FormData();
-
-      // 이미지 파일을 FormData에 추가
-      Object.keys(imageFiles).forEach((key) => {
-        imageFiles[key].forEach((file) => {
-          formData.append(key, file);
-        });
-      });
-
-      // 추가 입력값들을 FormData에 추가
-      const inputs = document.querySelectorAll('.input-container input, .input-container textarea');
-      inputs.forEach((input) => {
-        formData.append(input.name, input.value);
-      });
-
       // 서버로 FormData를 전송
       const response = await axios.post(`${apiUrl}/api/businesses`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
       });
 
       console.log('Upload successful:', response.data);
@@ -60,7 +53,9 @@ function Register() {
 
   return (
     <div className='mid' lang='ko'>
+      
       <div className='navigation'>
+        
         <button>
           <img src={arrowButtonUrl} alt='' onClick={()=>navigate('/admin-menu')} />
         </button>
@@ -68,19 +63,11 @@ function Register() {
         <div onClick={handleSave}>저장</div>
       </div>
       <div className='main-mid'>
-        <div className='upload-box' onClick={() => handleUploadClick('pricing')}>
-          <p>가격표</p>
-          <p>엑셀,이미지,pdf,한글 파일 등</p>
-          <div>
-            <img src={keyButtonUrl} alt='' />
-            파일올리기
-          </div>
-        </div>
         카테고리
         <div className='input-container'>
           <p>사업체 운영 종류</p>
-          <select>
-            <option value="value">미용</option>
+          <select name='category' onChange={handleInputChange}>
+            <option value="beauty">미용</option>
             <option value="hotel">호텔</option>
             <option value="kindergarten">유치원</option>
           </select>
@@ -88,37 +75,40 @@ function Register() {
         회원가입
         <div className='input-container'>
           <p>아이디</p>
-          <input type='text' name='login_id' onChange={handleInputChange} value={formData.login_id} placeholder='상호명을 입력해 주세요.' />
+          <input type='text' name='login_id' value={formData.login_id} onChange={handleInputChange} placeholder='상호명을 입력해 주세요.' />
         </div>
         <div className='input-container'>
           <p>비밀번호</p>
-          <input type='text' name='name' placeholder='상호명을 입력해 주세요.' />
+          <input type='text' name='login_password' value={formData.login_password} onChange={handleInputChange}  placeholder='상호명을 입력해 주세요.' />
         </div>
-
         사업자 정보
         <div className='input-container'>
           <p>사업자 등록명</p>
-          <input type='text' name='business_registration_name' placeholder='사업자 등록명' />
+          <input type='text' name='business_registration_name' value={formData.business_registration_name}  onChange={handleInputChange} placeholder='사업자 등록명' />
         </div>
         <div className='input-container'>
           <p>사업자 번호</p>
-          <input type='text' name='business_registration_number' placeholder='000-00-00000' />
+          <input type='text' name='business_registration_number' value={formData.business_registration_number} onChange={handleInputChange} placeholder='000-00-00000' />
+        </div>
+        <div className='input-container'>
+          <p>대표이름</p>
+          <input type='text' name='business_owner_name' value={formData.business_owner_name} onChange={handleInputChange} placeholder='대표이름' />
         </div>
         <div className='input-container'>
           <p>이메일</p>
-          <input type='text' name='email' placeholder='이메일' />
+          <input type='text' name='business_owner_email' value={formData.business_owner_email} onChange={handleInputChange} placeholder='이메일' />
         </div>
         <div className='input-container'>
           <p>대표번호</p>
-          <input type='text' name='phone' placeholder='010-0000-0000' />
+          <input type='text' name='business_owner_phone1' value={formData.business_owner_phone1} onChange={handleInputChange} placeholder='010' />
         </div>
         -
         <div className='input-container'>
-          <input type='text' name='phone' placeholder='010-0000-0000' />
-        </div> 
+          <input type='text' name='business_owner_phone2' value={formData.business_owner_phone2} onChange={handleInputChange} placeholder='0000' />
+        </div>
         -
         <div className='input-container'>
-          <input type='text' name='phone' placeholder='010-0000-0000' />
+          <input type='text' name='business_owner_phone3' value={formData.business_owner_phone3} onChange={handleInputChange} placeholder='0000' />
         </div>
       </div>
     </div>

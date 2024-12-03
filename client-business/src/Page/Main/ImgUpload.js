@@ -29,7 +29,7 @@ function ImgUpload() {
 
   const handleSave = () => {
     updateImageFiles(imageType, selectedFiles);
-    navigate('/register');
+    navigate('/register-information');
   };
 
   return (

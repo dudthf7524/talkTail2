@@ -2,7 +2,7 @@ const Business = require('../../models/Business');
 const Image = require('../../models/Image');
 const BeautyTag = require('../../models/BeautyTag');
 const BeautyTagRS = require('../../models/BeautyTagRS');
-
+const BusinessInformation = require('../../models/BusinessInformation');
 // 특정 카테고리의 모든 업체의 이름, 위치, 메인 이미지를 가져오는 함수
 const getBusinessesByCategory = async (category) => {
     try {
@@ -152,32 +152,54 @@ const getBusinessDetailsById = async (id) => {
 const createBusiness = async (businessInfo) => {
     try {
         const business = await Business.create({
-            id: businessInfo.id,
-            category: 'beauty',
-            platform_id: 'id',
-            platform: 'kakao',
-            name: businessInfo.name,
-            location: businessInfo.location,
-            weekday_open_time: '00:00:00',
-            weekday_close_time: '00:00:00',
-            weekend_open_time: '00:00:00',
-            weekend_close_time: '00:00:00',
-            dayon: businessInfo.dayon,
-            dayoff: businessInfo.dayoff,
-            store_number: businessInfo.store_number,
-            contents: businessInfo.contents,
-            business_registration_name: businessInfo.business_registration_name,
-            business_registration_number: businessInfo.business_registration_number,
-            business_owner: businessInfo.business_owner,
-            email: businessInfo.email,
-            phone: businessInfo.phone,
+            business_registration_number : businessInfo.business_registration_number,
+            business_registration_name : businessInfo.business_registration_name,
+            category : businessInfo.category,
+            login_id : businessInfo.login_id,
+            login_password : businessInfo. login_password,
+            business_owner_name : businessInfo. business_owner_name,
+            business_owner_email : businessInfo. business_owner_email,
+            business_owner_phone1 : businessInfo. business_owner_phone1,
+            business_owner_phone2 : businessInfo. business_owner_phone2,
+            business_owner_phone3 : businessInfo. business_owner_phone3,
             created_at: new Date(),
             updated_at: new Date(),
         });
-        processAndSaveTags(businessInfo.species, business.id);
+        
         return business;
     } catch (error) {
         throw new Error('Failed to create business', error.message);
+    }
+};
+
+const createBusinessInformation = async (businessInformationInfo) => {
+    console.log("serverce")
+    console.log(businessInformationInfo)
+    
+    try {
+        const businessInformation = await BusinessInformation.create({
+            business_registration_number: businessInformationInfo.business_registration_number,
+            business_name: businessInformationInfo.business_name,
+            address_postcode: businessInformationInfo.address_postcode,
+            address_road: businessInformationInfo.address_road,
+            address_jibun: businessInformationInfo.address_jibun,
+            address_detail: businessInformationInfo.address_detail,
+            weekday_open_time: businessInformationInfo.weekday_open_time,
+            weekday_close_time: businessInformationInfo.weekday_close_time,
+            weekend_open_time: businessInformationInfo.weekend_open_time,
+            weekend_close_time: businessInformationInfo.weekend_close_time,
+            day_on: businessInformationInfo.day_on,
+            day_off: businessInformationInfo.day_off,
+            business_phone1: businessInformationInfo.business_phone1,
+            business_phone2: businessInformationInfo.business_phone2,
+            business_comment: businessInformationInfo.business_comment,
+            business_no_show: businessInformationInfo.business_no_show,
+            created_at: new Date(),
+            updated_at: new Date(),
+        });
+        return businessInformation;
+    } catch (error) {
+        throw new Error('Failed to create businessInformation', error.message);
     }
 };
 
@@ -226,5 +248,6 @@ module.exports = {
     getBusinessesByCategory,
     getBusinessDetailsById,
     createBusiness,
-    updateBusiness
+    updateBusiness,
+    createBusinessInformation,
 };
