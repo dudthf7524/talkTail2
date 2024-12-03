@@ -110,6 +110,55 @@ function RegisterInformation() {
         }
     };
 
+    const [phone2, setPhone2] = useState(""); // 우편번호
+    const [phone3, setPhone3] = useState(""); // 우편번호
+    const [formData, setFormData] = useState({
+        address_postcode: '',
+        address_road: '',
+        address_jibun: '',
+        dayon: '',
+        dayoff: '',
+
+    });
+    formData.address_postcode = postcode;
+    formData.address_road = roadAddress;
+    formData.address_jibun = jibunAddress;
+   
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const [selectedDays, setSelectedDays] = useState([]); // 선택된 요일을 저장
+    const daysOfWeek = ["월", "화", "수", "목", "금", "토", "일"];
+
+    const toggleDay = (day) => {
+        setSelectedDays((prevSelected) => 
+            prevSelected.includes(day)
+                ? prevSelected.filter((d) => d !== day) // 이미 선택된 경우 제거
+                : [...prevSelected, day] // 선택된 경우 추가
+        );
+    };
+    const offDays = daysOfWeek.filter((day) => !selectedDays.includes(day));
+    
+    var dayon ='';
+    var dayoff ='';
+    for (let i = 0; i < selectedDays.length; i++) {
+        dayon += selectedDays[i]
+    }
+   
+    for (let i = 0; i < offDays.length; i++) {
+        dayoff += offDays[i]
+    }
+    
+    
+    formData.dayon = dayon;
+    formData.dayoff = dayoff;
+    console.log(formData)
+
     return (
         <div className='mid' lang='ko'>
             <div className='navigation'>
@@ -138,7 +187,7 @@ function RegisterInformation() {
                 </div>
                 <div className='input-container'>
                     <p>상호명</p>
-                    <input type='text' name='name' placeholder='상호명을 입력해 주세요.' />
+                    <input type='text' name='business_name' value={formData.business_name} onChange={handleInputChange} placeholder='상호명을 입력해 주세요.' />
                 </div>
                 {isPopupOpen && (
                     <div
@@ -174,95 +223,125 @@ function RegisterInformation() {
                 )}
                 <div className='input-container'>
                     <p>우편번호</p>
-                    <input type="text" value={postcode} readOnly placeholder="우편번호" />
+                    <input type="text" name='address_postcode' value={postcode} onChange={(e) => setPostcode(e.target.value)} readOnly placeholder="우편번호" />
                     <button onClick={handleAddressSearch}>우편번호 찾기</button>
                 </div>
                 <div className='input-container'>
                     <p>도로명 주소</p>
-                    <input type="text" value={roadAddress} readOnly placeholder="우편번호" />
+                    <input type="text" name='address_road' value={roadAddress} onChange={handleInputChange} readOnly placeholder="우편번호" />
                 </div>
                 <div className='input-container'>
                     <p>지번 주소</p>
-                    <input type="text" value={jibunAddress} readOnly placeholder="우편번호" />
+                    <input type="text" name='address_jibun' value={jibunAddress} onChange={handleInputChange} readOnly placeholder="우편번호" />
                 </div>
                 <div className='input-container'>
                     <p>상세 주소</p>
-                    <input type="text"/>
+                    <input type="text" name='address_detail' value={formData.address_detail} onChange={handleInputChange} />
                 </div>
-              
-                
-                
+
+
+
                 <div className='input-container'>
                     <p>평일오픈시간</p>
-                    <select>
-                        {
-                            times.map(function (a, i) {
-                                return (
-                                    <option>{a}</option>
-                                )
-                            })
+                    <select
+                        onChange={(e) =>
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                weekday_open_time: e.target.value, // 선택된 값을 formData에 저장
+                            }))
                         }
+                    >
+                        {times.map((time, i) => (
+                            <option key={i} value={time}>{time}</option>
+                        ))}
                     </select>
+
                 </div>
                 <div className='input-container'>
                     <p>평일마감시간</p>
-                    <select>
-                        {
-                            times.map(function (a, i) {
-                                return (
-                                    <option>{a}</option>
-                                )
-                            })
+                    <select
+                        onChange={(e) =>
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                weekday_close_time: e.target.value, // 선택된 값을 formData에 저장
+                            }))
                         }
+                    >
+                        {times.map((time, i) => (
+                            <option key={i} value={time}>{time}</option>
+                        ))}
                     </select>
                 </div>
                 <div className='input-container'>
                     <p>주말오픈시간</p>
-                    <select>
-                        {
-                            times.map(function (a, i) {
-                                return (
-                                    <option>{a}</option>
-                                )
-                            })
+                    <select
+                        onChange={(e) =>
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                weekend_open_time: e.target.value, // 선택된 값을 formData에 저장
+                            }))
                         }
+                    >
+                        {times.map((time, i) => (
+                            <option key={i} value={time}>{time}</option>
+                        ))}
                     </select>
                 </div>
                 <div className='input-container'>
                     <p>주말마감시간</p>
-                    <select>
-                        {
-                            times.map(function (a, i) {
-                                return (
-                                    <option>{a}</option>
-                                )
-                            })
+                    <select
+                        onChange={(e) =>
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                weekend_close_time: e.target.value, // 선택된 값을 formData에 저장
+                            }))
                         }
+                    >
+                        {times.map((time, i) => (
+                            <option key={i} value={time}>{time}</option>
+                        ))}
                     </select>
                 </div>
 
                 <div className='input-container'>
                     <p>영업일</p>
-                    <input type='text' name='business_registration_name' placeholder='사업자 등록명' />
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        {daysOfWeek.map((day) => (
+                            <button
+                                key={day}
+                                onClick={() => toggleDay(day)}
+                                style={{
+                                    padding: '10px 15px',
+                                    borderRadius: '5px',
+                                    border: '1px solid #ddd',
+                                    backgroundColor: selectedDays.includes(day) ? '#4CAF50' : '#fff',
+                                    color: selectedDays.includes(day) ? '#fff' : '#000',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                {day}
+                            </button>
+                        ))}
+                    </div>
+                    <p>선택된 영업일: {selectedDays.join(", ")}</p>
+                    <p>휴무일: {offDays.join(", ")}</p>
                 </div>
                 <div className='input-container'>
-                    <p>휴무일</p>
-                    <input type='text' name='business_registration_number' placeholder='000-00-00000' />
                 </div>
                 <div className='input-container'>
                     <p>가게전화번호</p>
-                    <select>
-                        <option>053</option>
-                    </select>
+
+                    <input type='text' className='phone' name='business_phone1' value={formData.business_phone1} onChange={handleInputChange} />
                     -
-                    <input type='text' />
+                    <input type='text' className='phone' name='business_phone2' value={formData.business_phone2} onChange={handleInputChange} />
                     -
-                    <input type='text' />
+                    <input type='text' className='phone'name='business_phone3' value={formData.business_phone3} onChange={handleInputChange} />
                 </div>
+
                 <div className='input-container'>
                     <p>인삿말</p>
                     <div className="textarea-wrapper">
-                        <textarea id='greetingTextarea' name='contents' />
+                        <textarea id='greetingTextarea' name='business_comment' value={formData.business_comment} onChange={handleInputChange} />
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ImageContext } from '../../Contexts/ImageContext';
@@ -10,16 +10,19 @@ function Register() {
   const arrowButtonUrl = `${process.env.PUBLIC_URL}/images/button/arrow_left.svg`;
   const keyButtonUrl = `${process.env.PUBLIC_URL}/images/icon/keyboard_return.svg`;
 
-  useEffect(() => {
-    const textarea = document.getElementById('greetingTextarea');
-    const placeholderText = '간단한 인삿말\n30자 이내';
-    textarea.setAttribute('placeholder', placeholderText);
-    textarea.style.whiteSpace = 'pre-line';
-  }, []);
-
   const handleUploadClick = (imageType) => {
     navigate(`/imgupload/${imageType}`);
   };
+
+  const [formData, setFormData] = useState({})
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+        ...formData,
+        [name]: value,
+    });
+};
 
   const handleSave = async () => {
     try {
@@ -65,38 +68,6 @@ function Register() {
         <div onClick={handleSave}>저장</div>
       </div>
       <div className='main-mid'>
-        {/* <div className='upload-box' onClick={() => handleUploadClick('main')}>
-          <p>메인사진(상세페이지 최상단 노출)</p>
-          <p>jpg 해상도 430*468</p>
-          <div>
-            <img src={keyButtonUrl} alt='' />
-            파일올리기
-          </div>
-        </div>
-        <div className='upload-box' onClick={() => handleUploadClick('sub')}>
-          <p>서브사진(로고 또는 가게 내외부 사진)</p>
-          <p>jpg,png 해상도 430*430</p>
-          <div>
-            <img src={keyButtonUrl} alt='' />
-            파일올리기
-          </div>
-        </div>
-        <div className='upload-box' onClick={() => handleUploadClick('album')}>
-          <p>앨범사진(포트폴리오 or 게시할 사진)</p>
-          <p>jpg 해상도 430*430</p>
-          <div>
-            <img src={keyButtonUrl} alt='' />
-            파일올리기
-          </div>
-        </div>
-        <div className='upload-box' onClick={() => handleUploadClick('review')}>
-          <p>후기사진(후기글은 .txt 파일로 업로드)</p>
-          <p>해상도 430*430</p>
-          <div>
-            <img src={keyButtonUrl} alt='' />
-            파일올리기
-          </div>
-        </div> */}
         <div className='upload-box' onClick={() => handleUploadClick('pricing')}>
           <p>가격표</p>
           <p>엑셀,이미지,pdf,한글 파일 등</p>
@@ -105,32 +76,26 @@ function Register() {
             파일올리기
           </div>
         </div>
+        카테고리
         <div className='input-container'>
-          <p>상호명</p>
+          <p>사업체 운영 종류</p>
+          <select>
+            <option value="value">미용</option>
+            <option value="hotel">호텔</option>
+            <option value="kindergarten">유치원</option>
+          </select>
+        </div>
+        회원가입
+        <div className='input-container'>
+          <p>아이디</p>
+          <input type='text' name='login_id' onChange={handleInputChange} value={formData.login_id} placeholder='상호명을 입력해 주세요.' />
+        </div>
+        <div className='input-container'>
+          <p>비밀번호</p>
           <input type='text' name='name' placeholder='상호명을 입력해 주세요.' />
         </div>
-        <div className='input-container'>
-          <p>주소</p>
-          <input type='text' name='location' placeholder='주소를 입력해 주세요.' />
-        </div>
-        <div className='input-container'>
-          <p>취급종</p>
-          <input type='text' name='species' placeholder='소형견,중형견,대형견 등' />
-        </div>
-        <div className='input-container'>
-          <p>영업요일</p>
-          <input type='text' name='dayon' placeholder='월화수목금토' />
-        </div>
-        <div className='input-container'>
-          <p>휴무일</p>
-          <input type='text' name='dayoff' placeholder='지정공휴일,매주 일요일' />
-        </div>
-        <div className='input-container'>
-          <p>인삿말</p>
-          <div className="textarea-wrapper">
-            <textarea id='greetingTextarea' name='contents' />
-          </div>
-        </div>
+
+        사업자 정보
         <div className='input-container'>
           <p>사업자 등록명</p>
           <input type='text' name='business_registration_name' placeholder='사업자 등록명' />
@@ -147,9 +112,13 @@ function Register() {
           <p>대표번호</p>
           <input type='text' name='phone' placeholder='010-0000-0000' />
         </div>
+        -
         <div className='input-container'>
-          <p>영업점 번호</p>
-          <input type='text' name='store_number' placeholder='02-000-0000' />
+          <input type='text' name='phone' placeholder='010-0000-0000' />
+        </div> 
+        -
+        <div className='input-container'>
+          <input type='text' name='phone' placeholder='010-0000-0000' />
         </div>
       </div>
     </div>
