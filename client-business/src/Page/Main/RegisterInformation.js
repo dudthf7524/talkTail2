@@ -131,6 +131,9 @@ function RegisterInformation() {
             Object.keys(formData).forEach((key) => {
                 data.append(key, formData[key]);
             });
+            console.log('aaa')
+            console.log(data)
+            
 
             // FormData에 이미지 파일 추가
             Object.keys(imageFiles).forEach((key) => {
