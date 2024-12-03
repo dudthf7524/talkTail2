@@ -98,11 +98,6 @@ const BusinessInformation = sequelize.define('TB_BUSINESSES_INFORMATION', {
        
         defaultValue: 0,
     },
-    business_registration_name: {
-        type: DataTypes.STRING(30),
-        allowNull: false,
-        defaultValue: '',
-    },
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
