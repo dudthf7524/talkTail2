@@ -13,8 +13,14 @@ const savedRoutes = require('./src/routes/savedRoutes');
 dotenv.config(); // .env 파일의 환경 변수 로드
 
 const app = express();
-const session = require('express-session');
+
 const passport = require('passport');
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store); // SequelizeStore 선언
+const store = new SequelizeStore({
+  db: sequelize, // Sequelize 인스턴스 연결
+  tableName: 'Sessions', // 세션 테이블 이름
+});
 
 app.set('port', process.env.PORT || 8282);
 
@@ -45,6 +51,7 @@ app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:4400'], // 허용할 도메인을 배열로 제공
   methods: ['GET', 'POST'], // 허용할 HTTP 메소드
   allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 헤더
+  credentials: true, 
 }));
 
 app.use(morgan('dev'));
@@ -55,15 +62,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-  secret: '암호화에 쓸 비번',
-  resave: false,
-  saveUninitialized: false
-}));
 
+app.use(session({
+  secret: '암호화에 쓸 비번', // 세션 암호화 키
+  store: store, // 세션 스토어 설정
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true, // 클라이언트에서 쿠키를 접근하지 못하도록
+    secure: false, // HTTPS 환경에서만 true
+    sameSite: 'None',  // 크로스 도메인에서 쿠키를 전송하기 위한 설정
+    maxAge: 24 * 60 * 60 * 1000,  // 쿠키 만료 시간 설정 (1일)
+  }
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.get('/user/auth', (req, res) => {
+  console.log(req.session)
+  res.json(req.user)
+});
+
+
 
 // 라우트 설정
 app.use('/api', authRoutes);

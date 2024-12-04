@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/menu.css'
+import axios from 'axios';
 
 const AdminMenu = () => {
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo/logo.svg`;
@@ -10,14 +11,25 @@ const AdminMenu = () => {
   const calculateIcon = `${process.env.PUBLIC_URL}/images/icon/calculateIcon.png`;
   const ImageIcon = `${process.env.PUBLIC_URL}/images/icon/ImageIcon.png`;
   const informationIcon = `${process.env.PUBLIC_URL}/images/icon/informationIcon.png`;
-
+  const apiUrl = process.env.REACT_APP_API_BASE_URL;
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/user/auth`)
+      .then((response) => {
+        setUser(response.data); // Set the users state with the response data
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error); // Handle errors
+      });
+  }, []);
   return (
     <div className='page-container'>
       <div className='menu-form' lang='ko'>
         <div className='greet-text'>안녕하세요.🙂</div>
-        <div className='greet-text'>000님</div>
+        <div className='greet-text'>{user}님</div>
         <div className='admin-menu-text'>Admin Menu</div>
         <div className='menu-grid'>
           <button className='menu-tbt-btn' onClick={()=>navigate('/reservation-management')}>

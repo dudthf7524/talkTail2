@@ -2,9 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const businessService = require('../services/businessService');
 const imageService = require('../services/imgService');
 
-
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
+const passport = require('../passport/local.js');
 const bcrypt = require('bcrypt')
 
 const getAllBusinesses = async (req, res) => {
@@ -97,73 +95,27 @@ const createBusinessInformation = async (req, res) => {
 };
 
 const businessLogin = async (req, res, next) => {
-      // 요청 본문에서 login_id와 password를 추출
-    
-
-    passport.use(new LocalStrategy(async (login_id, password, cb) => {
-        console.log(login_id)
-        console.log(password)
-        try {
-            // 로그인 ID로 사업자 찾기
-            const business = await businessService.businessLogin(login_id, password);
-            console.log('aaa')
-            console.log(business)
-            console.log('aaa')
-
-            // 사업자가 없다면
-            if (!business) {
-                return cb(null, false, { message: '존재하지 않는 사업자입니다.' });
-            }
-            
-            // 비밀번호 비교 (bcrypt를 사용하여 해시된 비밀번호와 비교)
-            const isPasswordValid = await bcrypt.compare(password, business.login_password);
-            
-            console.log(isPasswordValid)
-
-            // // 비밀번호가 일치하지 않으면
-            if (!isPasswordValid) {
-                return cb(null, false, { message: '비밀번호가 일치하지 않습니다.' });
-            }
-            
-            // 인증이 성공하면 business 객체를 반환
-            return cb(null, business);
-        } catch (error) {
-            return cb(error);
-        }
-    }));
-
     passport.authenticate('local', (error, user, info) => {
-        if (error) return res.status(500).json(error)
-        if (!user) return res.status(401).json(info.message)
-        req.logIn(user, (err) => {
-            if (err) return next(err)
-            res.redirect('/')
-        })
-    })(req, res, next)
-
-    //요청.login 사용하여 로그인 성공화면 세션 document 만들어서 쿠키를 유저에게 보내줌
-    passport.serializeUser((user, done) => {
-        console.log('세션 document 만들어서 쿠키를 유저에게 보내줌')
-        console.log(user.login_id)
-        console.log(user.business_owner_name)
-        console.log('세션 document 만들어서 쿠키를 유저에게 보내줌')
-        process.nextTick(() => {
-            done(null, { id: user.login_id, username: user.business_owner_name });
-        })
-    })
-
-    //쿠키를 분석하는 코드
-    passport.deserializeUser(async (user, done) => {
-        console.log(user)
-        const business = await businessService.businessLogin(user.id, user.password);
-
-        delete business.password
-        console.log(business)
-        process.nextTick(() => {
-            return done(null, business)
-        })
-    })
-};
+      if (error) return res.status(500).json({ message: '서버 오류가 발생했습니다.', error });
+      if (!user) return res.status(401).json({ message: info.message });
+  
+      req.logIn(user, (err) => {
+        if (err) return next(err);
+  
+        // 세션 상태 확인
+        console.log('Session after login:', req.session);
+        console.log('User in session:', req.session.passport);
+  
+        return res.status(200).json({
+          message: '로그인 성공',
+          user: {
+            id: user.login_id,
+            name: user.business_owner_name,
+          },
+        });
+      });
+    })(req, res, next);
+  };
 
 module.exports = {
     getAllBusinesses,

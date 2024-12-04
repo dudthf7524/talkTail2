@@ -8,19 +8,19 @@ function Login() {
   const login = async () => {
     const form = document.querySelector(".loginform");
     const formData = new FormData(form);
-  
+
     const data = {
       username: formData.get("username"),
       password: formData.get("password")
     };
     console.log(data)
-  
+
     try {
       // axios로 데이터 전송
-      const response = await axios.post(`${apiUrl}/api/business/login`, data);
+      const response = await axios.post(`${apiUrl}/api/business/login`, data, { withCredentials: true});
       if (response.status === 200) {
         alert("로그인이 완료되었습니다.");
-        window.location.href = "/register-information";
+        window.location.href = "/admin-menu";
       }
     } catch (error) {
       console.error("등록 실패:", error);
@@ -28,7 +28,7 @@ function Login() {
     }
 
   }
-  
+
 
   return (
     <div className='login' lang='ko'>
@@ -42,7 +42,12 @@ function Login() {
         <div className='login-form'>
           <input type='text' id='username' name='username' placeholder='ID' />
           <input type='password' id='password' name='password' placeholder='PW' />
-          <button type='submit' onClick={login}>로그인 하기</button>
+          <button type="button" onClick={(e) => {
+            e.preventDefault();
+            login();
+          }}>
+            로그인 하기
+          </button>
         </div>
       </form>
       <div className='find-id-pw-text'>

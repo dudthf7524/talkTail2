@@ -249,25 +249,23 @@ const processAndSaveTags = async (species, business_id) => {
 
 const businessLogin = async (login_id, login_password) => {
     try {
-        console.log(login_id)
-        console.log(login_id)
-        console.log(login_password)
-        console.log(login_password)
+      
         // business 테이블에서 login_id (business_id)에 해당하는 사업자 정보 조회
         const business = await Business.findOne({
             where: { login_id: login_id },  // login_id는 business_id에 해당
         });
-        console.log(business)
+       
         if (!business) {
             // 해당 사업자가 존재하지 않으면 null 반환
             return null;
         }
          // bcrypt를 사용하여 비밀번호 비교
          const isPasswordValid = await bcrypt.compare(login_password, business.login_password);
-
+      
          if (!isPasswordValid) {
              return null;  // 비밀번호 불일치하면 null 반환
          }
+         
 
         // 사업자가 존재하면 해당 사업자 객체 반환
         return business;

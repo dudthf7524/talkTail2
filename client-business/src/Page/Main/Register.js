@@ -79,7 +79,7 @@ console.log(formData)
         </div>
         <div className='input-container'>
           <p>비밀번호</p>
-          <input type='text' name='login_password' value={formData.login_password} onChange={handleInputChange}  placeholder='상호명을 입력해 주세요.' />
+          <input type='password' name='login_password' value={formData.login_password} onChange={handleInputChange}  placeholder='상호명을 입력해 주세요.' />
         </div>
         사업자 정보
         <div className='input-container'>
