@@ -3,6 +3,7 @@ const Image = require('../../models/Image');
 const BeautyTag = require('../../models/BeautyTag');
 const BeautyTagRS = require('../../models/BeautyTagRS');
 const BusinessInformation = require('../../models/BusinessInformation');
+const bcrypt = require('bcrypt')
 // 특정 카테고리의 모든 업체의 이름, 위치, 메인 이미지를 가져오는 함수
 const getBusinessesByCategory = async (category) => {
     try {
@@ -150,6 +151,7 @@ const getBusinessDetailsById = async (id) => {
 
 // 새로운 업체를 생성하는 함수
 const createBusiness = async (businessInfo) => {
+    console.log(businessInfo)
     try {
         const business = await Business.create({
             business_registration_number : businessInfo.business_registration_number,
@@ -245,10 +247,41 @@ const processAndSaveTags = async (species, business_id) => {
     }
 };
 
+const businessLogin = async (login_id, login_password) => {
+    try {
+        console.log(login_id)
+        console.log(login_id)
+        console.log(login_password)
+        console.log(login_password)
+        // business 테이블에서 login_id (business_id)에 해당하는 사업자 정보 조회
+        const business = await Business.findOne({
+            where: { login_id: login_id },  // login_id는 business_id에 해당
+        });
+        console.log(business)
+        if (!business) {
+            // 해당 사업자가 존재하지 않으면 null 반환
+            return null;
+        }
+         // bcrypt를 사용하여 비밀번호 비교
+         const isPasswordValid = await bcrypt.compare(login_password, business.login_password);
+
+         if (!isPasswordValid) {
+             return null;  // 비밀번호 불일치하면 null 반환
+         }
+
+        // 사업자가 존재하면 해당 사업자 객체 반환
+        return business;
+    } catch (error) {
+        console.error('Error in business login:', error);
+        throw new Error('Failed to fetch business data');
+    }
+};
+
 module.exports = {
     getBusinessesByCategory,
     getBusinessDetailsById,
     createBusiness,
     updateBusiness,
     createBusinessInformation,
+    businessLogin,
 };

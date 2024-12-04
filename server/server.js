@@ -13,6 +13,9 @@ const savedRoutes = require('./src/routes/savedRoutes');
 dotenv.config(); // .env 파일의 환경 변수 로드
 
 const app = express();
+const session = require('express-session');
+const passport = require('passport');
+
 app.set('port', process.env.PORT || 8282);
 
 // 데이터베이스 연결
@@ -49,6 +52,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: '암호화에 쓸 비번',
+  resave: false,
+  saveUninitialized: false
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // 라우트 설정
 app.use('/api', authRoutes);
 app.use('/api/pet', petRoutes);
@@ -60,3 +76,4 @@ app.use('/api', savedRoutes);
 app.listen(app.get('port'), () => {
   console.log(`${app.get('port')}번 포트에서 서버가 실행 중입니다.`);
 });
+

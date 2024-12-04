@@ -1,9 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth.css'
-
-const Login = () => {
+import axios from 'axios';
+function Login() {
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo/logo.svg`;
+  const apiUrl = process.env.REACT_APP_API_BASE_URL;
+  const login = async () => {
+    const form = document.querySelector(".loginform");
+    const formData = new FormData(form);
+  
+    const data = {
+      username: formData.get("username"),
+      password: formData.get("password")
+    };
+    console.log(data)
+  
+    try {
+      // axios로 데이터 전송
+      const response = await axios.post(`${apiUrl}/api/business/login`, data);
+      if (response.status === 200) {
+        alert("로그인이 완료되었습니다.");
+        window.location.href = "/register-information";
+      }
+    } catch (error) {
+      console.error("등록 실패:", error);
+      alert("로그인 실패, 다시 시도하세요.");
+    }
+
+  }
+  
 
   return (
     <div className='login' lang='ko'>
@@ -13,11 +38,13 @@ const Login = () => {
       <div className='login-text'>
         관리자 로그인
       </div>
-      <div className='login-form'>
-        <input type='text' id='username' name='username' placeholder='ID'/>
-        <input type='password' id='password' name='password' placeholder='PW'/>
-        <button type='submit'>로그인 하기</button>
-      </div>
+      <form className='loginform' typeof='post'>
+        <div className='login-form'>
+          <input type='text' id='username' name='username' placeholder='ID' />
+          <input type='password' id='password' name='password' placeholder='PW' />
+          <button type='submit' onClick={login}>로그인 하기</button>
+        </div>
+      </form>
       <div className='find-id-pw-text'>
         <Link to="/register">회원가입</Link>
       </div>

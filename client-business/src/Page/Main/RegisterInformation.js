@@ -10,7 +10,7 @@ function RegisterInformation() {
     const [jibunAddress, setJibunAddress] = useState(""); // 지번 주소
     const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 열림/닫힘 상태
     const popupRef = useRef(null);
-
+    
     const handleAddressSearch = () => {
         setIsPopupOpen(true); // 팝업 열기
 
@@ -64,7 +64,9 @@ function RegisterInformation() {
     const navigate = useNavigate();
     const arrowButtonUrl = `${process.env.PUBLIC_URL}/images/button/arrow_left.svg`;
     const keyButtonUrl = `${process.env.PUBLIC_URL}/images/icon/keyboard_return.svg`;
+    console.log("imageFiles")
     console.log(imageFiles)
+    console.log("imageFiles")
     useEffect(() => {
         const textarea = document.getElementById('greetingTextarea');
         const placeholderText = '간단한 인삿말\n30자 이내';
@@ -72,6 +74,7 @@ function RegisterInformation() {
         textarea.style.whiteSpace = 'pre-line';
     }, []);
 
+    
     const handleUploadClick = (imageType) => {
         navigate(`/imgupload/${imageType}`);
     };
@@ -142,7 +145,7 @@ function RegisterInformation() {
                 });
             });
             // 서버로 FormData를 전송
-            const response = await axios.post(`${apiUrl}/api/businesses-information`, formData, {
+            const response = await axios.post(`${apiUrl}/api/businesses-information`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

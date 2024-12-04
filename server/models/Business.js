@@ -21,7 +21,7 @@ const Business = sequelize.define('TB_BUSINESSES', {
         allowNull: false,
     },
     login_password: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(100),
         allowNull: false,
     },
     

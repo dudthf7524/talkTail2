@@ -59,7 +59,7 @@ const PetRegistration = () => {
     const photoUrl = `${process.env.PUBLIC_URL}/images/pet/photo.svg`;
     const [petImgUrl, setPetImgUrl] = useState(defaultPetImgUrl); // 이미지 URL 상태
     const [selectedImageFile, setSelectedImageFile] = useState(null); // 선택된 이미지 파일
-
+    console.log(petImgUrl)
     const [formData, setFormData] = useState({
         name: '',
         species: '',
@@ -190,6 +190,8 @@ const PetRegistration = () => {
     // 이미지 업로드 처리
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        console.log(file)
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -200,6 +202,8 @@ const PetRegistration = () => {
         }
     };
 
+    console.log('SelectedImageFile')
+    console.log(selectedImageFile)
     const handleSubmit = async () => {
         const petData = new FormData();
         petData.append('name', formData.name);

@@ -17,6 +17,7 @@ function ImgUpload() {
     setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
   };
 
+  
   const handleUploadBoxClick = () => {
     document.getElementById('fileInput').click();
   };
@@ -31,6 +32,8 @@ function ImgUpload() {
     updateImageFiles(imageType, selectedFiles);
     navigate('/register-information');
   };
+  console.log(imageType)
+  console.log(selectedFiles)
 
   return (
     <div className='mid' lang='ko'>

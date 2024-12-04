@@ -94,6 +94,8 @@ const uploadImageToBucket = async (fileBuffer, objectName, mimeType) => {
 // 다중 이미지 업로드
 const uploadMultipleImages = async (files, businessId) => {
     const results = [];
+    console.log(files)
+    console.log(businessId)
 
     for (const file of files) {
         const folder = file.fieldname;
