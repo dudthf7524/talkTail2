@@ -16,6 +16,7 @@ const AdminMenu = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     axios
       .get(`${apiUrl}/user/auth`)
       .then((response) => {

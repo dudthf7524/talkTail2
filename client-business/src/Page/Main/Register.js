@@ -10,7 +10,7 @@ function Register() {
   const arrowButtonUrl = `${process.env.PUBLIC_URL}/images/button/arrow_left.svg`;
   const keyButtonUrl = `${process.env.PUBLIC_URL}/images/icon/keyboard_return.svg`;
 
-  
+
 
   const [formData, setFormData] = useState({
     login_id: "",
@@ -27,13 +27,15 @@ function Register() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
-        ...formData,
-        [name]: value,
+      ...formData,
+      [name]: value,
     });
-};
+  };
 
-console.log(formData)
-
+  console.log(formData)
+  const handleUploadClick = (imageType) => {
+    navigate(`/imgupload/${imageType}`);
+  };
 
   const handleSave = async () => {
     try {
@@ -53,16 +55,26 @@ console.log(formData)
 
   return (
     <div className='mid' lang='ko'>
-      
+
       <div className='navigation'>
-        
+
         <button>
-          <img src={arrowButtonUrl} alt='' onClick={()=>navigate('/admin-menu')} />
+          <img src={arrowButtonUrl} alt='' onClick={() => navigate('/admin-menu')} />
         </button>
         등록자료 올리기
         <div onClick={handleSave}>저장</div>
       </div>
       <div className='main-mid'>
+
+        <div className='upload-box' onClick={() => handleUploadClick('main')}>
+          <p>사업자 등록증 </p>
+          <p>jpg 해상도 430*468</p>
+          <div>
+            <img src={keyButtonUrl} alt='' />
+            파일올리기
+          </div>
+        </div>
+
         카테고리
         <div className='input-container'>
           <p>사업체 운영 종류</p>
@@ -79,12 +91,12 @@ console.log(formData)
         </div>
         <div className='input-container'>
           <p>비밀번호</p>
-          <input type='password' name='login_password' value={formData.login_password} onChange={handleInputChange}  placeholder='상호명을 입력해 주세요.' />
+          <input type='password' name='login_password' value={formData.login_password} onChange={handleInputChange} placeholder='상호명을 입력해 주세요.' />
         </div>
         사업자 정보
         <div className='input-container'>
           <p>사업자 등록명</p>
-          <input type='text' name='business_registration_name' value={formData.business_registration_name}  onChange={handleInputChange} placeholder='사업자 등록명' />
+          <input type='text' name='business_registration_name' value={formData.business_registration_name} onChange={handleInputChange} placeholder='사업자 등록명' />
         </div>
         <div className='input-container'>
           <p>사업자 번호</p>

@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const businessService = require('../services/businessService');
 const imageService = require('../services/imgService');
 
-const passport = require('../passport/local.js');
+const passport = require('passport');
 const bcrypt = require('bcrypt')
 
 const getAllBusinesses = async (req, res) => {
@@ -99,7 +99,7 @@ const businessLogin = async (req, res, next) => {
       if (error) return res.status(500).json({ message: '서버 오류가 발생했습니다.', error });
       if (!user) return res.status(401).json({ message: info.message });
   
-      req.logIn(user, (err) => {
+      req.login(user, (err) => {
         if (err) return next(err);
   
         // 세션 상태 확인

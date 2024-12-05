@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth.css'
 import axios from 'axios';
-function Login() {
+const Login = () =>{
   const logoUrl = `${process.env.PUBLIC_URL}/images/logo/logo.svg`;
   const apiUrl = process.env.REACT_APP_API_BASE_URL;
+
   const login = async () => {
     const form = document.querySelector(".loginform");
     const formData = new FormData(form);
@@ -20,6 +21,7 @@ function Login() {
       const response = await axios.post(`${apiUrl}/api/business/login`, data, { withCredentials: true});
       if (response.status === 200) {
         alert("로그인이 완료되었습니다.");
+        console.log("req.body : ", response.data);
         window.location.href = "/admin-menu";
       }
     } catch (error) {
@@ -29,6 +31,14 @@ function Login() {
 
   }
 
+  const loadUser = async() => {
+    try {
+      const response = await axios.get(`${apiUrl}/api/business/test`);
+      console.log("response : ", response.data);
+    } catch(e) {
+      console.error(e);
+    }
+  }
 
   return (
     <div className='login' lang='ko'>
@@ -38,7 +48,8 @@ function Login() {
       <div className='login-text'>
         관리자 로그인
       </div>
-      <form className='loginform' typeof='post'>
+      <button onClick={loadUser}>asdasd</button>
+      <form className='loginform' typeof='post' onSubmit={login}>
         <div className='login-form'>
           <input type='text' id='username' name='username' placeholder='ID' />
           <input type='password' id='password' name='password' placeholder='PW' />
